@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('./config/db');
+const connectDB = require('../config/db');
 
 // Load env vars
 dotenv.config();
@@ -20,9 +20,9 @@ app.use(cors({
 }));
 
 // Route files
-const auth = require('./routes/authRoutes');
-const leaves = require('./routes/leaveRoutes');
-const users = require('./routes/userRoutes');
+const auth = require('../routes/authRoutes');
+const leaves = require('../routes/leaveRoutes');
+const users = require('../routes/userRoutes');
 
 // Mount routers
 app.use('/api/auth', auth);
