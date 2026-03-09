@@ -9,6 +9,16 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Connect to database
+const requiredEnvs = ['MONGODB_URI', 'JWT_SECRET'];
+const missingEnvs = requiredEnvs.filter(env => !process.env[env]);
+
+if (missingEnvs.length > 0) {
+    console.error('❌ CRITICAL ERROR: Missing environment variables:');
+    missingEnvs.forEach(env => console.error(`   - ${env}`));
+    console.error('\nPlease set these in your Render dashboard environment settings.');
+    process.exit(1);
+}
+
 connectDB();
 
 const app = express();
