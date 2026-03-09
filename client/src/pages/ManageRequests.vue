@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import api from '../services/api';
 import { useToast } from '../services/toast';
 import LeaveTable from '../components/leaves/LeaveTable.vue';
@@ -33,6 +33,7 @@ const loading = ref(true);
 const toast = useToast();
 
 const fetchData = async () => {
+  if (leaves.value.length === 0) loading.value = true;
   try {
     const response = await api.get('/leaves/all');
     leaves.value = response.data.data;
@@ -53,5 +54,15 @@ const handleAction = async (id, action) => {
   }
 };
 
-onMounted(fetchData);
+let pollInterval;
+
+onMounted(() => {
+  fetchData();
+  // Poll every 10 seconds for new requests
+  pollInterval = setInterval(fetchData, 10000);
+});
+
+onUnmounted(() => {
+  if (pollInterval) clearInterval(pollInterval);
+});
 </script>

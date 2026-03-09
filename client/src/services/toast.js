@@ -14,7 +14,10 @@ export const useToast = () => {
   };
 
   const removeToast = (id) => {
-    state.toasts = state.toasts.filter(t => t.id !== id);
+    const index = state.toasts.findIndex(t => t.id === id);
+    if (index !== -1) {
+      state.toasts.splice(index, 1);
+    }
   };
 
   return {

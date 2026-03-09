@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue';
+import { ref, reactive, onMounted, onUnmounted, computed } from 'vue';
 import { 
   FileText, 
   Clock, 
@@ -106,7 +106,7 @@ const calculateStats = (data) => {
 };
 
 const fetchData = async () => {
-  loading.value = true;
+  if (leaves.value.length === 0) loading.value = true;
   try {
     const endpoint = user.value.role === 'employer' ? '/leaves/all' : '/leaves/my';
     const response = await api.get(endpoint);
@@ -129,5 +129,15 @@ const handleAction = async (id, action) => {
   }
 };
 
-onMounted(fetchData);
+let pollInterval;
+
+onMounted(() => {
+  fetchData();
+  // Poll every 10 seconds
+  pollInterval = setInterval(fetchData, 10000);
+});
+
+onUnmounted(() => {
+  if (pollInterval) clearInterval(pollInterval);
+});
 </script>
